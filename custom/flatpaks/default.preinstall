@@ -28,5 +28,50 @@ Branch=stable
 
 # Add another by appending a section, for example:
 #
-# [Flatpak Preinstall io.github.flattool.Warehouse]
-# Branch=stable
+[Flatpak Preinstall io.github.flattool.Warehouse]
+Branch=stable
+
+[Flatpak Preinstall app.zen_browser.zen]
+Branch=stable
+
+[Flatpak Preinstall be.alexandervanhee.gradia]
+Branch=stable
+
+[Flatpak Preinstall com.github.PintaProject.Pinta]
+Branch=stable
+
+[Flatpak Preinstall com.github.finefindus.eyedropper]
+Branch=stable
+
+[Flatpak Preinstall de.haeckerfelix.Shortwave]
+Branch=stable
+
+[Flatpak Preinstall de.wwwtech.gitte]
+Branch=stable
+
+[Flatpak Preinstall io.bassi.Amberol]
+Branch=stable
+
+[Flatpak Preinstall io.gitlab.news_flash.NewsFlash]
+Branch=stable
+
+[Flatpak Preinstall md.obsidian.Obsidian]
+Branch=stable
+
+[Flatpak Preinstall no.bragefuglseth.Keypunch]
+Branch=stable
+
+[Flatpak Preinstall org.gimp.GIMP]
+Branch=stable
+
+[Flatpak Preinstall org.gnome.NautilusPreviewer]
+Branch=stable
+
+[Flatpak Preinstall org.gnome.World.PikaBackup]
+Branch=stable
+
+[Flatpak Preinstall org.localsend.localsend_app]
+Branch=stable
+
+[Flatpak Preinstall org.videolan.VLC]
+Branch=stable
