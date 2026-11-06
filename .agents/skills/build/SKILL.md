@@ -80,9 +80,18 @@ value, so build through `just`; a bare `podman build .` is unsupported.
 
 `build/*.sh.example` are inactive until you activate them: rename the file off
 `.example` and add a `RUN` block after the package phase.
-[build/README.md](../../../build/README.md) has the block to copy.
+[build/README.md](../../../build/README.md) has the block to copy. This fork
+has already activated `30-tailscale.sh` and `50-nvidia.sh`; what follows
+describes the scripts by the name they now carry.
 
-`50-nvidia.sh.example` pulls `ghcr.io/ublue-os/akmods-nvidia-open` through a
+A script's promises span files. `30-tailscale.sh` says `90-cleanup.sh`
+disables `tailscale.repo` as a backstop, and
+`tests/template/build-examples_test.bats` resolves the script by either name
+so the promise keeps being checked across activation. When you activate an
+example, drop the other paths that name it as inactive —
+`build/README.md`'s list, and any test that pins the `.example` path.
+
+`50-nvidia.sh` pulls `ghcr.io/ublue-os/akmods-nvidia-open` through a
 `skopeo` policy that accepts only images signed by `build/akmods-cosign.pub`, a
 copy of [ublue-os/akmods `cosign.pub`](https://github.com/ublue-os/akmods/blob/main/cosign.pub).
 If upstream rotates that key, update the copy; do not weaken the policy to

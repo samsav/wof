@@ -105,6 +105,38 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
     /ctx/build/20-packages-and-services.sh
 
+### CUSTOM PACKAGES AND SERVICES
+# Tailscale
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=cache,dst=/var/cache/libdnf5 \
+    --mount=type=cache,dst=/var/cache/rpm-ostree \
+    --mount=type=tmpfs,dst=/boot \
+    --mount=type=tmpfs,dst=/tmp \
+    /ctx/build/30-tailscale.sh
+
+# 1Password
+# RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+#     --mount=type=cache,dst=/var/cache/libdnf5 \
+#     --mount=type=cache,dst=/var/cache/rpm-ostree \
+#     --mount=type=tmpfs,dst=/boot \
+#     --mount=type=tmpfs,dst=/tmp \
+#     /ctx/build/32-1password.sh
+
+# vicinae
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=cache,dst=/var/cache/libdnf5 \
+    --mount=type=cache,dst=/var/cache/rpm-ostree \
+    --mount=type=tmpfs,dst=/boot \
+    --mount=type=tmpfs,dst=/tmp \
+    /ctx/build/35-vicinae.sh
+# NVIDIA
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=cache,dst=/var/cache/libdnf5 \
+    --mount=type=cache,dst=/var/cache/rpm-ostree \
+    --mount=type=tmpfs,dst=/boot \
+    --mount=type=tmpfs,dst=/tmp \
+    /ctx/build/50-nvidia.sh
+
 ### CLEANUP
 ## Finalises package and Flatpak sources, then prunes build artifacts before
 ## linting. /run is deliberately not mounted as tmpfs here: the script must
@@ -128,7 +160,7 @@ RUN rm -rf /opt && ln -s /var/opt /opt
 ## builds and CI supply the dynamic values through `just build`; keeping these
 ## ARGs late prevents a new version or timestamp from invalidating package and
 ## overlay layers above.
-ARG IMAGE_DESC="My Customized Universal Blue Image"
+ARG IMAGE_DESC="Custom Bluefin, with Wings of Fury"
 ARG IMAGE_CREATED=""
 ARG IMAGE_LOGO_URL="https://avatars.githubusercontent.com/u/120078124?s=200&v=4"
 ARG IMAGE_KEYWORDS="bootc,ublue,universal-blue"
