@@ -55,6 +55,10 @@ setup() {
     export PATH="${STUB_BIN}:${PATH}"
     export PODMAN_LOG SUDO_LOG
 
+    # Pin the image name so the recipe defaults resolve to the same fixture
+    # the assertions name, whatever this fork renamed the image to.
+    export IMAGE_NAME="finpilot"
+
     # What the `podman run --entrypoint /usr/bin/cat` of image-info.json
     # reports. The ISO path reads the published repository out of this.
     # CI only ever builds on main as stable-testing and promotes that digest to

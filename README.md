@@ -1,34 +1,27 @@
-# finpilot
+# Wings of Fury (custom Bluefin via the `finpilot` template)
 
-A template for building your own bootc operating system image, assembled the
-same way Bluefin, Aurora, and Bluefin LTS are: from shared OCI layers rather
-than by modifying an existing image. The desktop configuration comes from
-[`projectbluefin/common`](https://github.com/projectbluefin/common), Homebrew
-from [`ublue-os/brew`](https://github.com/ublue-os/brew), and the rest is yours.
+My customized Bluefin build. Chickens are the present-day dinosaurs,
+and I once named a chicken Wings of Fury. She was a tough little
+creature who outlasted every other hen in her flock.
 
-It is built to be driven by hand or by an agent.
+## What makes this raptor different?
 
-> Be the one who moves, not the one who is moved.
+This image is based on Fedora Silverlue and Bluefin. It includes these customizations:
 
-## What Makes this Raptor Different?
-
-Here are the changes from [Base Image Name]. This image is based on
-[Bluefin/Bazzite/Aurora/etc] and includes these customizations:
-
-### Added Packages (Build-time)
+### Added packages (Build-time)
 
 - List the packages you install at build time
 
-### Added Applications (Runtime)
+### Added applications (Runtime)
 
 - **CLI tools (Homebrew)**: list them
 - **GUI apps (Flatpak)**: list them
 
-### Removed or Disabled
+### Removed or disabled
 
 - List anything removed from the base image
 
-### Configuration Changes
+### Configuration changes
 
 - Systemd services enabled or disabled
 - Desktop environment changes

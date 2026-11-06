@@ -50,6 +50,9 @@ setup() {
 	done
 
 	export REAL_JUST LOGS
+	# Pin the image name so the recipe defaults resolve to the same fixture
+	# the assertions name, whatever this fork renamed the image to.
+	export IMAGE_NAME="finpilot"
 	export VM_RAM=4096 VM_CPUS=3
 	export SS_BUSY_PORTS="" STUB_PODMAN_STATUS=0
 	unset DISPLAY WAYLAND_DISPLAY QEMU_IMAGE
