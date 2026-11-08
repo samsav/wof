@@ -2,27 +2,6 @@
 
 set -euo pipefail
 
-###############################################################################
-# Example: Tailscale from the vendor RPM repository
-###############################################################################
-# Teaches the third-party repository pattern: add the vendor's repository,
-# install from it, then take the repository back out. The image ships no live
-# third-party source and no repository file left enabled to rot.
-#
-# Tailscale is the worked example because it is the common ask. The pattern is
-# the same for any vendor that publishes a .repo file: swap the URL and the
-# package name.
-#
-# To use this script:
-# 1. Rename it to remove the .example extension: 30-tailscale.sh
-# 2. Add the explicit RUN block from build/README.md for
-#    /ctx/build/30-tailscale.sh after the 20-packages-and-services.sh block and
-#    before the 90-cleanup.sh block in the Containerfile.
-#
-# Fedora also packages tailscale, but lags upstream by several releases. The
-# vendor repository is used to track current upstream builds.
-###############################################################################
-
 echo "::group:: Install Tailscale"
 
 # Let dnf5 fetch the vendor's own .repo file instead of hand-writing one, so
