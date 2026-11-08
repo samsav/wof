@@ -35,7 +35,7 @@
 
 # OCI context images - imported below and pinned directly in their FROM lines.
 # The base image is pinned in the FROM line below and updated by Renovate.
-FROM ghcr.io/projectbluefin/common:latest@sha256:b7e3487cafe8b21e10bb514f218406548f4c1abef5e444963094cbf2ec60e4b1 AS common
+FROM ghcr.io/projectbluefin/common:latest@sha256:6b195a605d9e4e11a8666ce0285b87361d6ad563a4ccaf5d11e1c1ca9b5421a2 AS common
 FROM ghcr.io/ublue-os/brew:latest@sha256:e9a72571b7644b6277f0638b6a3c5e497e265e1098ab91224567acbdeb8b74ea AS brew
 
 # Context stage - combine local and imported OCI container resources
@@ -50,7 +50,7 @@ COPY --from=brew /system_files /oci/brew
 
 # Base Image - GNOME included (Fedora official OSTree desktop)
 # Renovate will keep the digest pin up to date.
-FROM quay.io/fedora-ostree-desktops/silverblue:44@sha256:4d2bf23e865f7eca70d7d2191316001d27aa662fb5260f79b96941d2653c0a3b
+FROM quay.io/fedora-ostree-desktops/silverblue:44@sha256:72f80278f163e07c3e5f4f6c99b4303da5431629d057c68e919efcd389ffd0da
 
 # Image identity - these define how bootc, fastfetch, and the ublue ecosystem
 # recognize your image. Change these to match your project name.
@@ -105,6 +105,39 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
     /ctx/build/20-packages-and-services.sh
 
+### CUSTOM PACKAGES AND SERVICES
+# Tailscale
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=cache,dst=/var/cache/libdnf5 \
+    --mount=type=cache,dst=/var/cache/rpm-ostree \
+    --mount=type=tmpfs,dst=/boot \
+    --mount=type=tmpfs,dst=/tmp \
+    /ctx/build/30-tailscale.sh
+
+# 1Password
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=cache,dst=/var/cache/libdnf5 \
+    --mount=type=cache,dst=/var/cache/rpm-ostree \
+    --mount=type=tmpfs,dst=/boot \
+    --mount=type=tmpfs,dst=/tmp \
+    /ctx/build/32-1password.sh
+
+# Vicinae, Zed
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=cache,dst=/var/cache/libdnf5 \
+    --mount=type=cache,dst=/var/cache/rpm-ostree \
+    --mount=type=tmpfs,dst=/boot \
+    --mount=type=tmpfs,dst=/tmp \
+    /ctx/build/35-terra-installs.sh
+
+# NVIDIA
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=cache,dst=/var/cache/libdnf5 \
+    --mount=type=cache,dst=/var/cache/rpm-ostree \
+    --mount=type=tmpfs,dst=/boot \
+    --mount=type=tmpfs,dst=/tmp \
+    /ctx/build/50-nvidia.sh
+
 ### CLEANUP
 ## Finalises package and Flatpak sources, then prunes build artifacts before
 ## linting. /run is deliberately not mounted as tmpfs here: the script must
@@ -128,7 +161,7 @@ RUN rm -rf /opt && ln -s /var/opt /opt
 ## builds and CI supply the dynamic values through `just build`; keeping these
 ## ARGs late prevents a new version or timestamp from invalidating package and
 ## overlay layers above.
-ARG IMAGE_DESC="My Customized Universal Blue Image"
+ARG IMAGE_DESC="Custom Bluefin, with Wings of Fury"
 ARG IMAGE_CREATED=""
 ARG IMAGE_LOGO_URL="https://avatars.githubusercontent.com/u/120078124?s=200&v=4"
 ARG IMAGE_KEYWORDS="bootc,ublue,universal-blue"

@@ -1,8 +1,8 @@
 name: Renovate
 
 on:
-  schedule:
-    - cron: "0 */6 * * *"
+  # schedule:
+  #   - cron: "0 */6 * * *"
   workflow_dispatch:
   push:
     branches:
@@ -42,6 +42,6 @@ jobs:
     if: needs.token.outputs.configured == 'true'
     permissions:
       contents: read
-    uses: projectbluefin/actions/.github/workflows/reusable-renovate.yml@ab3980490e9461a7c7c6f1836eb9c49e90da93ad # v1
+    uses: samsav/bluefin-actions/.github/workflows/reusable-renovate.yml@a605dd934a87ef21af772c0d4c8dc3f8cefd1849 # fork of projectbluefin/actions: check-token-health fine-grained PAT fix
     secrets:
       renovate_token: ${{ secrets.RENOVATE_TOKEN }}
