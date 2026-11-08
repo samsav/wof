@@ -23,6 +23,8 @@ CI runs the same checks; running them locally only makes the pull request quiet.
 
 | Symptom | Cause | Fix |
 |---|---|---|
+| `cpio: mkdir failed - File exists` / `No such file or directory` installing an RPM whose files live under `/opt` | the image's `/opt` is a symlink to `var/opt` and `/var/opt` does not exist during the build; cpio cannot create anything through the dangling symlink | `mkdir -p /var/opt` before the transaction, then move the payload into `/usr` and recreate `/opt/<pkg>` at boot via a `tmpfiles.d` `L` entry (see `build/32-1password.sh`) |
+| `bootc container lint` fails: `/etc/group` entry without corresponding `systemd sysusers.d` | a script or RPM `%post` ran `groupadd` at build time, writing bare `/etc/group` entries the deployed system cannot reproduce | declare the groups in `/usr/lib/sysusers.d` (only that directory counts, matched by name) and run `systemd-sysusers` instead of `groupadd` |
 | `bootc container lint` fails on a nonempty `/run` | a script wrote to `/run` into an image layer | remove it in `90-cleanup.sh`; that phase deliberately does not mount `/run` as tmpfs |
 | a third-party repository is live in the final image | a script enabled it and did not disable it | use `copr_install_isolated`, or disable it explicitly |
 | the package layer rebuilds on every overlay edit | packages drifted into the overlay phase | keep packages in `20-packages-and-services.sh` |
@@ -34,7 +36,7 @@ CI runs the same checks; running them locally only makes the pull request quiet.
 |---|---|---|
 | `validate` never runs | branch protection names a check no workflow produces | the context must be exactly `validate` |
 | Renovate logs a skip and opens nothing | `RENOVATE_TOKEN` is not set | expected; set the secret to turn Renovate on |
-| Renovate fails on `Validate RENOVATE_TOKEN` | the token is expired or lacks the `workflow` scope | recreate the token |
+| Renovate fails on `Validate RENOVATE_TOKEN` with no error annotation | classic PAT: expired or lacking the `workflow` scope; fine-grained PAT: the shared `check-token-health.sh` greps for the `X-OAuth-Scopes` header, which fine-grained tokens never send, and `set -euo pipefail` kills the script at the failed grep before the scope check is even used | use a classic PAT (`repo` + `workflow`) until projectbluefin/actions handles fine-grained tokens; a one-line `|| true` on the grep is the upstream fix |
 | the promotion PR never opens | `stable` does not exist | create the branch |
 | the promotion PR will not merge | `stable` requires an approval | set required approvals to 0 |
 | a Renovate PR waits forever | auto-merge is off | enable it in Settings |

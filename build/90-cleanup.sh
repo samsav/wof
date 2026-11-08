@@ -33,7 +33,7 @@ disable_repo_file() {
 for repo_file in "${REPOS_DIR}"/_copr:*.repo "${REPOS_DIR}"/_copr_*.repo "${REPOS_DIR}"/rpmfusion-*.repo; do
 	disable_repo_file "${repo_file}"
 done
-for repo_name in fedora-multimedia tailscale fedora-cisco-openh264 fedora-coreos-pool; do
+for repo_name in fedora-multimedia tailscale fedora-cisco-openh264 fedora-coreos-pool terra; do
 	disable_repo_file "${REPOS_DIR}/${repo_name}.repo"
 done
 

@@ -101,8 +101,16 @@ a skip and the run stays green; nothing else in the image depends on it.
    another and replace the secret.
 
 > A classic token carries every permission you have, on every repository you can
-> reach. If you would rather not, create a fine-grained token instead, scoped to
-> this repository, with **Contents: Read and write** and **Workflows: Write**.
+> reach. If you would rather not, a fine-grained token scoped to this repository
+> is the intent — repository permissions **Contents**, **Pull requests**,
+> **Issues**, **Workflows** and **Commit statuses** all *Read and write*, plus
+> **Dependabot alerts** *Read-only* (Metadata is granted automatically) — but as
+> of 2026-11 the shared `check-token-health.sh` still dies on every fine-grained
+> token: it greps for the `X-OAuth-Scopes` header that only classic tokens send,
+> and `set -euo pipefail` turns the missing header into a silent exit-1 before
+> the scope check can be skipped. A classic PAT (`repo` + `workflow`) passes the
+> validator today; a fine-grained token only once the upstream script guards the
+> grep.
 
 ### Store it as a secret
 
@@ -274,8 +282,18 @@ gh api repos/{owner}/{repo}/branches --jq '.[].name'
 gh api repos/{owner}/{repo}/branches/main/protection --jq '.required_status_checks.contexts'
 gh api repos/{owner}/{repo}/branches/stable/protection --jq '.required_status_checks.contexts'
 gh api repos/{owner}/{repo}/rulesets --jq '.[].name'
+gh api repos/{owner}/{repo}/rulesets --jq '.[].id'
+gh api repos/{owner}/{repo}/rulesets/<id> --jq '{name, include: .conditions.ref_name.include, checks: [.rules[] | select(.type=="required_status_checks") | .parameters.required_status_checks], merges: [.rules[] | select(.type=="pull_request") | .parameters.allowed_merge_methods], approvals: [.rules[] | select(.type=="pull_request") | .parameters.required_approving_review_count]}'
 gh secret list --repo {owner}/{repo}
 ```
+
+The two `branches/.../protection` calls 404 when protection lives in rulesets
+instead of classic branch protection — that is a passing state, not a gap. Read
+the rulesets: a single ruleset per branch that carries the `validate` required
+check, the pull-request rule, and squash-only merge methods on `stable` covers
+steps 7-9 at once. `RENOVATE_TOKEN` being present proves only that a secret
+exists; a token that is expired or lacks the `workflow` scope sets green
+settings but fails the Renovate run's token-validation step in seconds.
 
 Done when `main` and `stable` both exist and both require `validate`, the squash
 ruleset is active, `RENOVATE_TOKEN` is set, and a push to `main` that changes

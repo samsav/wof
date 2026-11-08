@@ -1,43 +1,63 @@
-# finpilot
+# Wings of Fury (custom Bluefin via the `finpilot` template)
 
-A template for building your own bootc operating system image, assembled the
-same way Bluefin, Aurora, and Bluefin LTS are: from shared OCI layers rather
-than by modifying an existing image. The desktop configuration comes from
-[`projectbluefin/common`](https://github.com/projectbluefin/common), Homebrew
-from [`ublue-os/brew`](https://github.com/ublue-os/brew), and the rest is yours.
+My customized Bluefin build. Chickens are the present-day dinosaurs,
+and I once named a chicken Wings of Fury. She was a tough little
+creature who outlasted every other hen in her flock.
 
-It is built to be driven by hand or by an agent.
+## What makes this raptor different?
 
-> Be the one who moves, not the one who is moved.
+This image is based on Fedora Silverblue and Bluefin. It includes these customizations:
 
-## What Makes this Raptor Different?
+### Added packages (Build-time)
 
-Here are the changes from [Base Image Name]. This image is based on
-[Bluefin/Bazzite/Aurora/etc] and includes these customizations:
+- **Tailscale**, from Tailscale's RPM repository, with `tailscaled` enabled
+  ([build/30-tailscale.sh](build/30-tailscale.sh))
+- **1Password and 1Password CLI**, from 1Password's RPM repository
+  ([build/32-1password.sh](build/32-1password.sh))
+- **Vicinae and Zed**, from the Terra repository
+  ([build/35-terra-installs.sh](build/35-terra-installs.sh))
+- **NVIDIA (open) support** ([build/50-nvidia.sh](build/50-nvidia.sh))
 
-### Added Packages (Build-time)
+### Added applications (Runtime)
 
-- List the packages you install at build time
+**CLI tools (Homebrew)** — installed on demand via `ujust install-default-apps`
+([custom/brew/default.Brewfile](custom/brew/default.Brewfile)):
 
-### Added Applications (Runtime)
+- Shell tools: `bat`, `bat-extras`, `eza`, `fd`, `fzf`, `procs`, `ripgrep`,
+  `dust`, `duf`, `tre-command`, `zoxide`, `zsh`, `starship`, `tmux`
+- Development: `neovim`, `just`, `kanata`, `nmap`, `restic`, `ast-grep`,
+  `bats-core`, `fnm`, `gcc`, `git-delta`, `git-pkgs-brief`, `go`, `rust`,
+  `tree-sitter-cli`, `uv`, `crush` (charmbracelet/tap), `terraform`
+  (hashicorp/tap)
+- CLIs and TUIs: `fastfetch`, `gh`, `kew`
+- Libraries: `libtiff`, `imagemagick`, `pdftk-java`
+- Fonts: 0xProto Nerd Font, Atkinson Hyperlegible Mono/Next, B612 Mono
 
-- **CLI tools (Homebrew)**: list them
-- **GUI apps (Flatpak)**: list them
+**GUI apps (Flatpak)** — installed on first boot
+([custom/flatpaks/default.preinstall](custom/flatpaks/default.preinstall)):
 
-### Removed or Disabled
+- Communication and email: Thunderbird
+- Browsers: Zen Browser
+- Writing and notes: Obsidian
+- Images: GIMP, Pinta, Eyedropper, Gradia
+- Media: VLC, Amberol, Shortwave
+- Files and backup: Pika Backup, LocalSend, Nautilus Previewer
+- Reading and feeds: NewsFlash
+- Development: Gitte
+- Desktop tooling: Flatseal, Extension Manager, Warehouse, Keypunch
 
-- List anything removed from the base image
+### Removed or disabled
 
-### Configuration Changes
+- Nothing beyond the base template's cleanup (third-party RPM repositories are
+  used at build time only and removed or disabled before the image ships).
 
-- Systemd services enabled or disabled
-- Desktop environment changes
-- Other notable modifications
+### Configuration changes
 
-_Last updated: [date]_
+- The `tailscaled` service is enabled at build time.
+- Systemd update timers (`uupd`) and the Brew/Flatpak first-boot units come
+  from the base template and stay on.
 
-> This section is what tells your users how your image differs from its base.
-> Update it whenever you add or remove a package, app, or service.
+_Last updated: 2026-11-07_
 
 ## Quick start
 

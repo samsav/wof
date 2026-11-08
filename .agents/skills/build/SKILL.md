@@ -27,6 +27,25 @@ structure, in order:
 
 Order matters for cache: volatile values go after the expensive layers.
 
+## The `/opt` and `/var` rules
+
+At build time `/opt` is a symlink to `var/opt` and `/var/opt` does not exist,
+so an RPM installing under `/opt` fails its cpio unpack until the script runs
+`mkdir -p /var/opt`. It is still not safe to leave the payload there: `/var`
+in the image behaves like a Docker volume, seeded from the initial image at
+first boot and never touched by later image updates. Payloads therefore move
+into `/usr` and a `tmpfiles.d` entry recreates `/opt/<pkg>` at boot; this repo
+has no blue-build CLI "one true optfix" to do it generically. The worked
+example is `build/32-1password.sh`.
+
+That script also shows the group rule: any group that ends up in `/etc/group`
+at build time — from a script's `groupadd` or an RPM `%post` — must also be
+declared in `/usr/lib/sysusers.d` or `bootc container lint` fails, because
+sysusers is how the deployed system reproduces that state. Declare the groups
+with fixed GIDs above the per-user range (1000+) and run `systemd-sysusers`
+to materialize them; the scriptlets' `getent` checks then skip their own
+`groupadd`, so the setgid bits land on the declared GIDs.
+
 ## The Justfile
 
 ```bash
@@ -80,9 +99,18 @@ value, so build through `just`; a bare `podman build .` is unsupported.
 
 `build/*.sh.example` are inactive until you activate them: rename the file off
 `.example` and add a `RUN` block after the package phase.
-[build/README.md](../../../build/README.md) has the block to copy.
+[build/README.md](../../../build/README.md) has the block to copy. This fork
+has already activated `30-tailscale.sh` and `50-nvidia.sh`; what follows
+describes the scripts by the name they now carry.
 
-`50-nvidia.sh.example` pulls `ghcr.io/ublue-os/akmods-nvidia-open` through a
+A script's promises span files. `30-tailscale.sh` says `90-cleanup.sh`
+disables `tailscale.repo` as a backstop, and
+`tests/template/build-examples_test.bats` resolves the script by either name
+so the promise keeps being checked across activation. When you activate an
+example, drop the other paths that name it as inactive —
+`build/README.md`'s list, and any test that pins the `.example` path.
+
+`50-nvidia.sh` pulls `ghcr.io/ublue-os/akmods-nvidia-open` through a
 `skopeo` policy that accepts only images signed by `build/akmods-cosign.pub`, a
 copy of [ublue-os/akmods `cosign.pub`](https://github.com/ublue-os/akmods/blob/main/cosign.pub).
 If upstream rotates that key, update the copy; do not weaken the policy to
