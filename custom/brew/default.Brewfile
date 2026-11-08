@@ -3,7 +3,7 @@
 # Users install via: ujust install-default-apps
 
 ### Taps ###
-tap "charmbracelet/tap", trusted: true
+# tap "charmbracelet/tap", trusted: true
 tap "hashicorp/tap", trusted: true
 
 ### Shell tools ###
@@ -69,7 +69,7 @@ brew "tree-sitter-cli"
 # Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
 # A powerful terminal-based AI assistant for developers, providing intelligent coding assistance directly in your terminal.
-brew "charmbracelet/tap/crush", trusted: true
+# brew "charmbracelet/tap/crush", trusted: true
 # Terraform
 brew "hashicorp/tap/terraform", trusted: true
 
