@@ -37,6 +37,7 @@ CI runs the same checks; running them locally only makes the pull request quiet.
 | `validate` never runs | branch protection names a check no workflow produces | the context must be exactly `validate` |
 | Renovate logs a skip and opens nothing | `RENOVATE_TOKEN` is not set | expected; set the secret to turn Renovate on |
 | Renovate fails on `Validate RENOVATE_TOKEN` with no error annotation | classic PAT: expired or lacking the `workflow` scope; fine-grained PAT: the shared `check-token-health.sh` greps for the `X-OAuth-Scopes` header, which fine-grained tokens never send, and `set -euo pipefail` kills the script at the failed grep before the scope check is even used | use a classic PAT (`repo` + `workflow`) until projectbluefin/actions handles fine-grained tokens; a one-line `|| true` on the grep is the upstream fix |
+| `Validate Brewfiles` fails with `invalid syntax in tap!` / `found no classes` | a tap named in the Brewfiles is broken upstream — the validator reports a real first-boot failure, not a repo defect | check the tap's repo for an issue and fix PR, comment the blockage on the red PR, and re-run the check once upstream lands; there is no Brewfile-side workaround (Homebrew removed tap pinning, and cloning a fork through the tap URL would freeze the formulas) |
 | the promotion PR never opens | `stable` does not exist | create the branch |
 | the promotion PR will not merge | `stable` requires an approval | set required approvals to 0 |
 | a Renovate PR waits forever | auto-merge is off | enable it in Settings |
