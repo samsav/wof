@@ -16,9 +16,9 @@ on:
   push:
     branches:
       - main
-  # schedule:
-  #   # Default daily promotion window. Fork owners may change this cadence.
-  #   - cron: "0 4 * * *"
+  schedule:
+    # Default daily promotion window. Fork owners may change this cadence.
+    - cron: "0 4 * * *"
   workflow_dispatch:
 
 permissions:
