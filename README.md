@@ -6,31 +6,58 @@ creature who outlasted every other hen in her flock.
 
 ## What makes this raptor different?
 
-This image is based on Fedora Silverlue and Bluefin. It includes these customizations:
+This image is based on Fedora Silverblue and Bluefin. It includes these customizations:
 
 ### Added packages (Build-time)
 
-- List the packages you install at build time
+- **Tailscale**, from Tailscale's RPM repository, with `tailscaled` enabled
+  ([build/30-tailscale.sh](build/30-tailscale.sh))
+- **1Password and 1Password CLI**, from 1Password's RPM repository
+  ([build/32-1password.sh](build/32-1password.sh))
+- **Vicinae and Zed**, from the Terra repository
+  ([build/35-terra-installs.sh](build/35-terra-installs.sh))
+- **NVIDIA (open) support** ([build/50-nvidia.sh](build/50-nvidia.sh))
 
 ### Added applications (Runtime)
 
-- **CLI tools (Homebrew)**: list them
-- **GUI apps (Flatpak)**: list them
+**CLI tools (Homebrew)** — installed on demand via `ujust install-default-apps`
+([custom/brew/default.Brewfile](custom/brew/default.Brewfile)):
+
+- Shell tools: `bat`, `bat-extras`, `eza`, `fd`, `fzf`, `procs`, `ripgrep`,
+  `dust`, `duf`, `tre-command`, `zoxide`, `zsh`, `starship`, `tmux`
+- Development: `neovim`, `just`, `kanata`, `nmap`, `restic`, `ast-grep`,
+  `bats-core`, `fnm`, `gcc`, `git-delta`, `git-pkgs-brief`, `go`, `rust`,
+  `tree-sitter-cli`, `uv`, `crush` (charmbracelet/tap), `terraform`
+  (hashicorp/tap)
+- CLIs and TUIs: `fastfetch`, `gh`, `kew`
+- Libraries: `libtiff`, `imagemagick`, `pdftk-java`
+- Fonts: 0xProto Nerd Font, Atkinson Hyperlegible Mono/Next, B612 Mono
+
+**GUI apps (Flatpak)** — installed on first boot
+([custom/flatpaks/default.preinstall](custom/flatpaks/default.preinstall)):
+
+- Communication and email: Thunderbird
+- Browsers: Zen Browser
+- Writing and notes: Obsidian
+- Images: GIMP, Pinta, Eyedropper, Gradia
+- Media: VLC, Amberol, Shortwave
+- Files and backup: Pika Backup, LocalSend, Nautilus Previewer
+- Reading and feeds: NewsFlash
+- Development: Gitte
+- Desktop tooling: Flatseal, Extension Manager, Warehouse, Keypunch
 
 ### Removed or disabled
 
-- List anything removed from the base image
+- Nothing beyond the base template's cleanup (third-party RPM repositories are
+  used at build time only and removed or disabled before the image ships).
 
 ### Configuration changes
 
-- Systemd services enabled or disabled
-- Desktop environment changes
-- Other notable modifications
+- The `tailscaled` service is enabled at build time.
+- Systemd update timers (`uupd`) and the Brew/Flatpak first-boot units come
+  from the base template and stay on.
 
-_Last updated: [date]_
-
-> This section is what tells your users how your image differs from its base.
-> Update it whenever you add or remove a package, app, or service.
+_Last updated: 2026-11-07_
 
 ## Quick start
 
