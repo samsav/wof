@@ -115,20 +115,21 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     /ctx/build/30-tailscale.sh
 
 # 1Password
-# RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
-#     --mount=type=cache,dst=/var/cache/libdnf5 \
-#     --mount=type=cache,dst=/var/cache/rpm-ostree \
-#     --mount=type=tmpfs,dst=/boot \
-#     --mount=type=tmpfs,dst=/tmp \
-#     /ctx/build/32-1password.sh
-
-# vicinae
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache/libdnf5 \
     --mount=type=cache,dst=/var/cache/rpm-ostree \
     --mount=type=tmpfs,dst=/boot \
     --mount=type=tmpfs,dst=/tmp \
-    /ctx/build/35-vicinae.sh
+    /ctx/build/32-1password.sh
+
+# Vicinae, Zed
+RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
+    --mount=type=cache,dst=/var/cache/libdnf5 \
+    --mount=type=cache,dst=/var/cache/rpm-ostree \
+    --mount=type=tmpfs,dst=/boot \
+    --mount=type=tmpfs,dst=/tmp \
+    /ctx/build/35-terra-installs.sh
+
 # NVIDIA
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache/libdnf5 \
