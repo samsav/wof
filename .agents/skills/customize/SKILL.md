@@ -38,6 +38,13 @@ Prefer a package the base already ships. When a COPR is unavoidable,
 Brewfiles in `custom/brew/`, plus a `ujust` recipe so users install it by name.
 [custom/brew/README.md](../../../custom/brew/README.md) has the format.
 
+Every named tap is evaluated live by `just validate-brewfiles`, so an upstream
+tap breakage turns that check red for every PR that touches it — the failure is
+real, since `brew bundle` cannot install on a fresh machine either. Find the
+tap's own issue and fix PR, comment the blockage on the red PR, and re-run once
+upstream lands. Do not try to pin a tap: Homebrew removed tap pinning, and
+cloning a fork through the tap's URL would freeze its formulas.
+
 ### Flatpak
 
 Preinstall declarations in `custom/flatpaks/`. The app must exist on Flathub;
