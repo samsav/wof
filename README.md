@@ -177,7 +177,7 @@ sides together, so changing one without the other fails the suite.
 Switch to a built image:
 
 ```bash
-sudo bootc switch --transport registry ghcr.io/your-username/your-repo-name:stable-testing
+sudo bootc switch --transport registry ghcr.io/samsav/wof-os:stable-testing
 sudo systemctl reboot
 ```
 

@@ -1,7 +1,7 @@
 ###############################################################################
 # PROJECT NAME CONFIGURATION
 ###############################################################################
-# Name: wof
+# Name: wof-os
 #
 # The authoritative name at publish time is the repository name: build-image.yml
 # derives IMAGE_NAME from ${{ github.event.repository.name }} and pushes the
@@ -50,11 +50,11 @@ COPY --from=brew /system_files /oci/brew
 
 # Base Image - GNOME included (Fedora official OSTree desktop)
 # Renovate will keep the digest pin up to date.
-FROM quay.io/fedora-ostree-desktops/silverblue:44@sha256:c8e9a0ac04c5b22ee84c2f0bfd9a1e03de47cdc208b31bc6fe8a53ab683755f9
+FROM quay.io/fedora-ostree-desktops/silverblue:44@sha256:9449622ae599dc0d9c6325c66703dd290cb686b1eff78b2df68e3c36b5c8cd08
 
 # Image identity - these define how bootc, fastfetch, and the ublue ecosystem
 # recognize your image. Change these to match your project name.
-ARG IMAGE_NAME="wof"
+ARG IMAGE_NAME="wof-os"
 ARG IMAGE_VENDOR="projectbluefin"
 ARG UBLUE_IMAGE_TAG="stable"
 # Supplied by `just build` from the base image's FROM line.
